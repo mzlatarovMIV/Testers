@@ -1,4 +1,9 @@
 {
   "name": "Testers",
-  "version": "0.0.0+20240726162317"
+  "version": "1.0.0.r2607241",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/mzlatarovMIV/Testers.git"
+  }
 }
