@@ -19,6 +19,42 @@ void SetPinsPullUP(uint8_t* PinsToSet, size_t size)
   }
 }
 /**
+* @brief Set pins to input pull down
+*
+* @param PinsToSet Array of pins to set
+*     
+* @param size Size of the array 
+* 
+* @example SetPinsPullDown(AllPins, sizeof(AllPins));
+* 
+* @return void
+*/
+void SetPinsPullDown(uint8_t* PinsToSet, size_t size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    pinMode(PinsToSet[i],INPUT_PULLDOWN);
+  }
+}
+/**
+* @brief Set pins to output
+*
+* @param PinsToSet Array of pins to set
+*     
+* @param size Size of the array 
+* 
+* @example SetPinsOutput(AllPins, sizeof(AllPins));
+* 
+* @return void
+*/
+void SetPinsOutput(uint8_t* PinsToSet, size_t size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    pinMode(PinsToSet[i],OUTPUT);
+  }
+}
+/**
 * @brief Confirm shorts from array
 *
 * @param pins Array of pins to confirm short
