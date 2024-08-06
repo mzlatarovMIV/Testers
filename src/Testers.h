@@ -262,3 +262,22 @@ float VoltageScale(float ScaleFactor, uint16_t MeasuredValue)
   }
   return CalculatedValue;
 }
+/**
+ * @brief Calculates measured value * scale factor, e.g. ADC measurement.
+ * 
+ * @param ScaleFactor Scaling factor, e.g. 1.5
+ * 
+ * @param MeasuredValue Value to be scaled
+ * 
+ * @return float
+ */
+float CurrentScale(float ScaleFactor, uint16_t MeasuredValue)
+{
+  float CalculatedValue = MeasuredValue*ScaleFactor;
+  if(CalculatedValue<0)
+  {
+    Serial.print("Error calculated value cannot be negative number");
+    return 0;
+  }
+  return CalculatedValue;
+}
