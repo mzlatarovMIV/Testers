@@ -263,14 +263,14 @@ float VoltageScale(float ScaleFactor, uint16_t MeasuredValue)
   return CalculatedValue;
 }
 /**
- * @brief Calculates measured value * scale factor, e.g. ADC measurement.
- * 
- * @param ScaleFactor Scaling factor, e.g. 1.5
- * 
- * @param MeasuredValue Value to be scaled
- * 
- * @return float
- */
+* @brief Calculates measured value * scale factor, e.g. ADC measurement.
+* 
+* @param ScaleFactor Scaling factor, e.g. 1.5
+* 
+* @param MeasuredValue Value to be scaled
+* 
+* @return float
+*/
 float CurrentScale(float ScaleFactor, uint16_t MeasuredValue)
 {
   float CalculatedValue = MeasuredValue*ScaleFactor;
@@ -282,38 +282,95 @@ float CurrentScale(float ScaleFactor, uint16_t MeasuredValue)
   return CalculatedValue;
 }
 
-uint8_t DiodeTest(uint8_t Anode, uint8_t Cathode)
+/**
+* @brief Set pins to LOW
+* 
+* @param PinsToSet Array of pins to set
+* 
+* @param size Size of the array
+* 
+* @return void
+*/
+void SetPinsLOW(uint8_t* PinsToSet, size_t size)
 {
-  pinMode(Anode, INPUT_PULLDOWN);
-  pinMode(Cathode, OUTPUT);
-  digitalWrite(Cathode, HIGH);  
-  if(digitalRead(Anode))
+  for (size_t i = 0; i < size; i++)
+  {
+    digitalWrite(PinsToSet[i],LOW);
+  }
+}
+
+/**
+* @brief Set pins to HIGH
+* 
+* @param PinsToSet Array of pins to set
+* 
+* @param size Size of the array
+* 
+* @return void
+*/
+void SetPinsHIGH(uint8_t* PinsToSet, size_t size)
+{
+  for (size_t i = 0; i < size; i++)
+  {
+    digitalWrite(PinsToSet[i],HIGH);
+  }
+}
+
+/**
+* @brief Diode test function
+* 
+* @param Anode Array of Anode pins
+*
+* @param size_A Size of the Anode array
+*
+* @param Cathode Array of Cathode pins
+*
+* @param size_C Size of the Cathode array
+*
+* @return uint8_t, error=1, pass=0
+*/
+uint8_t DiodeTest(uint8_t* Anode, size_t size_A, uint8_t* Cathode, size_t size_C)
+{
+  SetPinsPullDown(Anode, sizeof(size_A));
+  SetPinsOutput(Cathode, sizeof(size_C));
+  SetPinsHIGH(Cathode, sizeof(size_C));
+  delay(1);
+  if(digitalRead(Anode[0]))
   {
     Serial.print("Diode is reversed or shorted");  
     Serial.println();
-    pinMode(Anode, INPUT_PULLUP);
-    pinMode(Cathode, INPUT_PULLUP);
+    SetPinsPullUP(Anode, sizeof(size_A));
+    SetPinsPullUP(Cathode, sizeof(size_C));
     return 1;
   }
-  digitalWrite(Cathode, LOW);
-  pinMode(Cathode, INPUT_PULLDOWN);
-  pinMode(Anode, OUTPUT);
-  digitalWrite(Anode, HIGH);
+  SetPinsPullDown(Cathode, sizeof(size_C));
+  SetPinsOutput(Anode, sizeof(size_A));
+  SetPinsLOW(Anode, sizeof(size_A));
   delay(1);
-  if(digitalRead(Cathode))
+  if(digitalRead(Cathode[0]))
   {
-    Serial.print("Diode connected");  
+    Serial.println("Diode error!");
+    SetPinsPullUP(Anode, sizeof(size_A));
+    SetPinsPullUP(Cathode, sizeof(size_C));
+    return 1;
+  }
+  SetPinsHIGH(Anode, sizeof(size_A));
+  delay(1);
+  if(digitalRead(Cathode[0]))
+  {
+    Serial.print("Diode ok!");  
     Serial.println();
-    pinMode(Anode, INPUT_PULLUP);
-    pinMode(Cathode, INPUT_PULLUP);
+    SetPinsPullUP(Anode, sizeof(size_A));
+    SetPinsPullUP(Cathode, sizeof(size_C));
     return 0;
   }
   else
   {
     Serial.print("Diode is open");  
     Serial.println();
-    pinMode(Anode, INPUT_PULLUP);
-    pinMode(Cathode, INPUT_PULLUP);
+    SetPinsPullUP(Anode, sizeof(size_A));
+    SetPinsPullUP(Cathode, sizeof(size_C));
     return 1;
   }
+  return 1;
 }
