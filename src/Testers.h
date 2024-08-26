@@ -281,3 +281,39 @@ float CurrentScale(float ScaleFactor, uint16_t MeasuredValue)
   }
   return CalculatedValue;
 }
+
+uint8_t DiodeTest(uint8_t Anode, uint8_t Cathode)
+{
+  pinMode(Anode, INPUT_PULLDOWN);
+  pinMode(Cathode, OUTPUT);
+  digitalWrite(Cathode, HIGH);  
+  if(digitalRead(Anode))
+  {
+    Serial.print("Diode is reversed or shorted");  
+    Serial.println();
+    pinMode(Anode, INPUT_PULLUP);
+    pinMode(Cathode, INPUT_PULLUP);
+    return 1;
+  }
+  digitalWrite(Cathode, LOW);
+  pinMode(Cathode, INPUT_PULLDOWN);
+  pinMode(Anode, OUTPUT);
+  digitalWrite(Anode, HIGH);
+  delay(1);
+  if(digitalRead(Cathode))
+  {
+    Serial.print("Diode connected");  
+    Serial.println();
+    pinMode(Anode, INPUT_PULLUP);
+    pinMode(Cathode, INPUT_PULLUP);
+    return 0;
+  }
+  else
+  {
+    Serial.print("Diode is open");  
+    Serial.println();
+    pinMode(Anode, INPUT_PULLUP);
+    pinMode(Cathode, INPUT_PULLUP);
+    return 1;
+  }
+}
