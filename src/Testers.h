@@ -235,7 +235,7 @@ void SetErrorLEDS(uint8_t PinErrorLED, uint8_t PinPassLED)
 void SetPassLEDS(uint8_t PinErrorLED, uint8_t PinPassLED)
 {
   digitalWrite(PinErrorLED, LOW);
-  for(int i=0; i<5; i++)
+  for(int i=0; i<7; i++)
   {
     digitalWrite(PinPassLED, HIGH);
     delay(500);
